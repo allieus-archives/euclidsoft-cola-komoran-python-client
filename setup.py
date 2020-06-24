@@ -4,6 +4,7 @@ setup_requires = [
 ]
 
 install_requires = [
+    'ray',
     'grpcio',
     'tqdm',
 ]
