@@ -3,7 +3,7 @@
 ## 라이브러리 설치
 
 ```sh
-pip install https://github.com/euclidsoft/cola-komoran-python-client/archive/1.0.1.zip
+pip install https://github.com/euclidsoft/cola-komoran-python-client/archive/1.0.2.zip
 ```
 
 ## 샘플 코드

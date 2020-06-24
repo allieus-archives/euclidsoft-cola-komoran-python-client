@@ -58,7 +58,7 @@ def summarize_batch_with_ray(sentence_list_series, with_tqdm=True):
         for sentence_list in sentence_list_series
     ]
     if with_tqdm:
-        return list(tqdm(to_iterator(obj_ids), len(obj_ids)))
+        return list(tqdm(to_iterator(obj_ids), total=len(obj_ids)))
     else:
         return ray.get(obj_ids)
 
