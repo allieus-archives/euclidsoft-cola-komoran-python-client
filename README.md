@@ -2,7 +2,14 @@
 
 ## 주의
 
-> 라이브러리를 업데이트되면, ray.remote 객체 재생성을 위해 ray cluster stop/start가 필요할 수도 있습니다.
+라이브러리를 업데이트되면, ray.remote 객체 재생성을 위해 ray cluster stop/start가 필요할 수도 있습니다.
+
+Ray는 Remote함수와 의존성있는 함수를 한꺼번에 직렬화하여 Ray Cluster상에 저장을 합니다. 의존성있는 함수가 변경되었음에도Ray Cluster상에 직렬화된 함수가 업데이트되지 않을 수 있습니다. 이때 ray cluster stop/start를 통해 초기화를 해볼 수 있겠습니다.
+
+```sh
+ray stop
+ray start --head --num-cpus 36 --num-gpus 1
+```
 
 ## 라이브러리 설치
 
