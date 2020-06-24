@@ -4,8 +4,8 @@
 import ray
 from tqdm.auto import tqdm
 from grpc import insecure_channel
-from kr.re.keit.Komoran_pb2_grpc import KomoranStub
-from kr.re.keit.Komoran_pb2 import TokenizeRequest
+from .kr.re.keit.Komoran_pb2_grpc import KomoranStub
+from .kr.re.keit.Komoran_pb2 import TokenizeRequest
 from textrank import KeywordSummarizer
 
 
@@ -28,7 +28,7 @@ class GrpcTokenizer:
 
 
 @ray.remote
-def summarize(sentence_list, target='localhost:50051', window=-1, verbose=False, topk=10):
+def summarize(sentence_list, target, window, verbose, topk):
     tokenize = GrpcTokenizer(target)
     summarizer = KeywordSummarizer(
         tokenize = tokenize,
@@ -49,9 +49,9 @@ def ray_shutdown():
     ray.shutdown()
 
 
-def summarize_batch_with_ray(sentence_list_series, with_tqdm=True):
+def summarize_batch_with_ray(sentence_list_series, with_tqdm=True, target='localhost:50051', window=-1, verbose=False, topk=10):
     obj_ids = [
-        summarize.remote(sentence_list)
+        summarize.remote(sentence_list, target=target, window=window, verbose=verbose, topk=topk)
         for sentence_list in sentence_list_series
     ]
     if with_tqdm:
