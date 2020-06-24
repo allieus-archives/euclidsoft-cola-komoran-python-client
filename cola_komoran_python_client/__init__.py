@@ -17,7 +17,7 @@ def to_iterator(obj_ids):
 
 
 class GrpcTokenizer:
-    def __init__(self, target, dic_type):
+    def __init__(self, target, dic_type=0):
         channel = insecure_channel(target)
         self.stub = KomoranStub(channel)
         self.dic_type = dic_type
