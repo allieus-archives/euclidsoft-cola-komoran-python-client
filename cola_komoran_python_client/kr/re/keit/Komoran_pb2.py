@@ -18,10 +18,28 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='kr.re.keit',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\x18kr/re/keit/Komoran.proto\x12\nkr.re.keit\"#\n\x0fTokenizeRequest\x12\x10\n\x08sentence\x18\x01 \x01(\t\"#\n\x10TokenizeResponse\x12\x0f\n\x07keyword\x18\x01 \x03(\t2R\n\x07Komoran\x12G\n\x08tokenize\x12\x1b.kr.re.keit.TokenizeRequest\x1a\x1c.kr.re.keit.TokenizeResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x18kr/re/keit/Komoran.proto\x12\nkr.re.keit\"q\n\x0fTokenizeRequest\x12\x34\n\x07\x64icType\x18\x01 \x01(\x0e\x32#.kr.re.keit.TokenizeRequest.DicType\x12\x10\n\x08sentence\x18\x02 \x01(\t\"\x16\n\x07\x44icType\x12\x0b\n\x07\x44\x45\x46\x41ULT\x10\x00\"#\n\x10TokenizeResponse\x12\x0f\n\x07keyword\x18\x01 \x03(\t2R\n\x07Komoran\x12G\n\x08tokenize\x12\x1b.kr.re.keit.TokenizeRequest\x1a\x1c.kr.re.keit.TokenizeResponse\"\x00\x62\x06proto3'
 )
 
 
+
+_TOKENIZEREQUEST_DICTYPE = _descriptor.EnumDescriptor(
+  name='DicType',
+  full_name='kr.re.keit.TokenizeRequest.DicType',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='DEFAULT', index=0, number=0,
+      serialized_options=None,
+      type=None),
+  ],
+  containing_type=None,
+  serialized_options=None,
+  serialized_start=131,
+  serialized_end=153,
+)
+_sym_db.RegisterEnumDescriptor(_TOKENIZEREQUEST_DICTYPE)
 
 
 _TOKENIZEREQUEST = _descriptor.Descriptor(
@@ -32,8 +50,15 @@ _TOKENIZEREQUEST = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='sentence', full_name='kr.re.keit.TokenizeRequest.sentence', index=0,
-      number=1, type=9, cpp_type=9, label=1,
+      name='dicType', full_name='kr.re.keit.TokenizeRequest.dicType', index=0,
+      number=1, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='sentence', full_name='kr.re.keit.TokenizeRequest.sentence', index=1,
+      number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -43,6 +68,7 @@ _TOKENIZEREQUEST = _descriptor.Descriptor(
   ],
   nested_types=[],
   enum_types=[
+    _TOKENIZEREQUEST_DICTYPE,
   ],
   serialized_options=None,
   is_extendable=False,
@@ -51,7 +77,7 @@ _TOKENIZEREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=40,
-  serialized_end=75,
+  serialized_end=153,
 )
 
 
@@ -81,10 +107,12 @@ _TOKENIZERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=77,
-  serialized_end=112,
+  serialized_start=155,
+  serialized_end=190,
 )
 
+_TOKENIZEREQUEST.fields_by_name['dicType'].enum_type = _TOKENIZEREQUEST_DICTYPE
+_TOKENIZEREQUEST_DICTYPE.containing_type = _TOKENIZEREQUEST
 DESCRIPTOR.message_types_by_name['TokenizeRequest'] = _TOKENIZEREQUEST
 DESCRIPTOR.message_types_by_name['TokenizeResponse'] = _TOKENIZERESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -111,8 +139,8 @@ _KOMORAN = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=114,
-  serialized_end=196,
+  serialized_start=192,
+  serialized_end=274,
   methods=[
   _descriptor.MethodDescriptor(
     name='tokenize',

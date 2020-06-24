@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# tqdm
-# https://github.com/lovit/textrank/archive/master.zip
-# grpcio
-
 import ray
 from tqdm.auto import tqdm
 from grpc import insecure_channel
@@ -18,13 +14,14 @@ def to_iterator(obj_ids):
         done, obj_ids = ray.wait(obj_ids)
         yield ray.get(done[0])
 
+
 class GrpcTokenizer:
     def __init__(self, target):
         channel = insecure_channel(target)
         self.stub = KomoranStub(channel)
 
-    def __call__(self, sentence):
-        request = TokenizeRequest(sentence=sentence)
+    def __call__(self, sentence, dic_type=0):
+        request = TokenizeRequest(dicType=dic_type, sentence=sentence)
         response = self.stub.tokenize(request)
         keyword_list = response.keyword
         return keyword_list
