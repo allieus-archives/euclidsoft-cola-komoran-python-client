@@ -2,11 +2,18 @@
 # -*- coding: utf-8 -*-
 
 import ray
+from enum import Enum
 from tqdm.auto import tqdm
 from grpc import insecure_channel
 from .kr.re.keit.Komoran_pb2_grpc import KomoranStub
 from .kr.re.keit.Komoran_pb2 import TokenizeRequest
 from textrank import KeywordSummarizer
+
+
+class DicType(Enum):
+    DEFAULT = 0
+    OVERALL = 1
+    MINIMAL = 2
 
 
 def to_iterator(obj_ids):
@@ -17,7 +24,7 @@ def to_iterator(obj_ids):
 
 
 class GrpcTokenizer:
-    def __init__(self, target, dic_type=0):
+    def __init__(self, target, dic_type=DicType.DEFAULT):
         channel = insecure_channel(target)
         self.stub = KomoranStub(channel)
         self.dic_type = dic_type
@@ -29,17 +36,26 @@ class GrpcTokenizer:
         return keyword_list
 
 
-def ray_init(address="auto"):
-    ray.init(address=address)
+@ray.remote
+def summarize(sentence_list, target, window, verbose, topk, dic_type):
+    tokenize = GrpcTokenizer(target, dic_type=dic_type)
+    summarizer = KeywordSummarizer(
+        tokenize = tokenize,
+        window = window,
+        verbose = verbose,
+    )
+    try:
+        return summarizer.summarize(sentence_list, topk=topk)
+    except ValueError:
+        return []
 
 
-def ray_shutdown():
-    ray.shutdown()
-
-
-def summarize_batch_with_ray(sentence_list_series, dic_type=0, target='localhost:50051', verbose=False, with_tqdm=True):
+def summarize_batch_with_ray(sentence_list_series, with_tqdm=True,
+                             target='localhost:50051', window=-1, verbose=False, topk=10,
+                             dic_type=DicType.DEFAULT):
     obj_ids = [
-        summarize.remote(sentence_list, target=target, verbose=verbose, dic_type=dic_type)
+        summarize.remote(sentence_list, target=target, window=window, verbose=verbose, topk=topk,
+                         dic_type=dic_type)
         for sentence_list in sentence_list_series
     ]
     if with_tqdm:
@@ -48,19 +64,13 @@ def summarize_batch_with_ray(sentence_list_series, dic_type=0, target='localhost
         return ray.get(obj_ids)
 
 
-@ray.remote
-def summarize(sentence_list, target, verbose, dic_type=0):
-    tokenize = GrpcTokenizer(target, dic_type)
-    summarizer = KeywordSummarizer(
-        tokenize = tokenize,
-        window = -1,
-        verbose = verbose,
-    )
-    try:
-        return summarizer.summarize(sentence_list, topk=10)
-    except ValueError:
-        return []
+def ray_init(address="auto"):
+    ray.init(address=address)
 
 
-__call__ = ["ray_init", "ray_shutdown", "summarize_batch_with_ray"]
+def ray_shutdown():
+    ray.shutdown()
+
+
+__all__ = ["summarize_batch_with_ray", "ray_init", "ray_shutdown"]
 

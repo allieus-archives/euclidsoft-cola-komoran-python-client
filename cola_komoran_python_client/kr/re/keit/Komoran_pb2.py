@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='kr.re.keit',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\x18kr/re/keit/Komoran.proto\x12\nkr.re.keit\"q\n\x0fTokenizeRequest\x12\x34\n\x07\x64icType\x18\x01 \x01(\x0e\x32#.kr.re.keit.TokenizeRequest.DicType\x12\x10\n\x08sentence\x18\x02 \x01(\t\"\x16\n\x07\x44icType\x12\x0b\n\x07\x44\x45\x46\x41ULT\x10\x00\"#\n\x10TokenizeResponse\x12\x0f\n\x07keyword\x18\x01 \x03(\t2R\n\x07Komoran\x12G\n\x08tokenize\x12\x1b.kr.re.keit.TokenizeRequest\x1a\x1c.kr.re.keit.TokenizeResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x18kr/re/keit/Komoran.proto\x12\nkr.re.keit\"\x8b\x01\n\x0fTokenizeRequest\x12\x34\n\x07\x64icType\x18\x01 \x01(\x0e\x32#.kr.re.keit.TokenizeRequest.DicType\x12\x10\n\x08sentence\x18\x02 \x01(\t\"0\n\x07\x44icType\x12\x0b\n\x07\x44\x45\x46\x41ULT\x10\x00\x12\x0b\n\x07OVERALL\x10\x01\x12\x0b\n\x07MINIMAL\x10\x02\"#\n\x10TokenizeResponse\x12\x0f\n\x07keyword\x18\x01 \x03(\t2R\n\x07Komoran\x12G\n\x08tokenize\x12\x1b.kr.re.keit.TokenizeRequest\x1a\x1c.kr.re.keit.TokenizeResponse\"\x00\x62\x06proto3'
 )
 
 
@@ -33,11 +33,19 @@ _TOKENIZEREQUEST_DICTYPE = _descriptor.EnumDescriptor(
       name='DEFAULT', index=0, number=0,
       serialized_options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='OVERALL', index=1, number=1,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='MINIMAL', index=2, number=2,
+      serialized_options=None,
+      type=None),
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=131,
-  serialized_end=153,
+  serialized_start=132,
+  serialized_end=180,
 )
 _sym_db.RegisterEnumDescriptor(_TOKENIZEREQUEST_DICTYPE)
 
@@ -76,8 +84,8 @@ _TOKENIZEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=40,
-  serialized_end=153,
+  serialized_start=41,
+  serialized_end=180,
 )
 
 
@@ -107,8 +115,8 @@ _TOKENIZERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=155,
-  serialized_end=190,
+  serialized_start=182,
+  serialized_end=217,
 )
 
 _TOKENIZEREQUEST.fields_by_name['dicType'].enum_type = _TOKENIZEREQUEST_DICTYPE
@@ -139,8 +147,8 @@ _KOMORAN = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=192,
-  serialized_end=274,
+  serialized_start=219,
+  serialized_end=301,
   methods=[
   _descriptor.MethodDescriptor(
     name='tokenize',

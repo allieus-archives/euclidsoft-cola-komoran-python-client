@@ -20,13 +20,17 @@ pip install https://github.com/euclidsoft/cola-komoran-python-client/archive/mas
 ## ray를 활용한 bulk 호출 샘플 코드
 
 ```python
-from cola_komoran_python_client import ray_init, ray_shutdown, summarize_batch_with_ray
+from cola_komoran_python_client import ray_init, ray_shutdown, summarize_batch_with_ray, DicType
 
 ray_init()  # 처음 1회만 수행해주세요.
 
 # ray를 활용한 summarize 수행합니다. tqdm은 내부적으로 수행됩니다.
 # tqdm을 수행하지 않으려면 with_tqdm=False 인자를 지정해주세요.
-keyword_list = summarize_batch_with_ray(sentence_list_series)
+keyword_list = summarize_batch_with_ray(sentence_list_series, dic_type=DicType.DEFAULT)
+
+keyword_list = summarize_batch_with_ray(sentence_list_series, dic_type=DicType.OVERALL)
+
+keyword_list = summarize_batch_with_ray(sentence_list_series, dic_type=DicType.MINIMAL)
 
 ray_shutdown()  # 모든 작업이 끝내거나, ray cluster를 초기화시키고자 할 때
 ```
@@ -37,11 +41,12 @@ ray_shutdown()  # 모든 작업이 끝내거나, ray cluster를 초기화시키�
 
 ```python
 from grpc import insecure_channel
+from cola_komoran_python_client import DicType
 from cola_komoran_python_client.kr.re.keit.Komoran_pb2_grpc import KomoranStub
 from cola_komoran_python_client.kr.re.keit.Komoran_pb2 import TokenizeRequest
 
 class GrpcTokenizer:
-    def __init__(self, target, dic_type=0):
+    def __init__(self, target, dic_type=DicType.DEFAULT):
         channel = insecure_channel(target)
         self.stub = KomoranStub(channel)
         self.dic_type = dic_type
@@ -70,9 +75,9 @@ print(tokenize(sentence))
 ### textrank의 KeywordSummarizer 활용하기
 
 ```python
-from cola_komoran_python_client import GrpcTokenizer, KeywordSummarizer
+from cola_komoran_python_client import GrpcTokenizer, KeywordSummarizer, DicType
 
-tokenize = GrpcTokenizer("localhost:50051", dic_type=0)
+tokenize = GrpcTokenizer("localhost:50051", dic_type=DicType.DEFAULT)
 summarizer = KeywordSummarizer(
     tokenize = tokenize,
     window = -1,
