@@ -15,7 +15,7 @@ dependency_links = [
  
 setup(
     name='cola-komoran-python-client',
-    version='1.2.2',
+    version='1.2.3',
     url='https://github.com/euclidsoft/cola-komoran-python-client',
     author='Chinseok Lee',
     author_email='me@askcompany.kr',
