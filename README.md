@@ -49,7 +49,10 @@ class GrpcTokenizer:
     def __init__(self, target, dic_type=DicType.DEFAULT):
         channel = insecure_channel(target)
         self.stub = KomoranStub(channel)
-        self.dic_type = dic_type
+        if isinstance(dic_type, DicType):
+            self.dic_type = dic_type.value
+        else:
+            self.dic_type = dic_type
 
     def __call__(self, sentence):
         request = TokenizeRequest(dicType=self.dic_type, sentence=sentence)
