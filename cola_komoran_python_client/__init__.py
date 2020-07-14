@@ -5,9 +5,14 @@ import ray
 from enum import Enum
 from tqdm.auto import tqdm
 from grpc import insecure_channel
+from textrank import KeywordSummarizer
+
 from .kr.re.keit.Komoran_pb2_grpc import KomoranStub
 from .kr.re.keit.Komoran_pb2 import TokenizeRequest
-from textrank import KeywordSummarizer
+from .U_dripwordFinder import (CompoundRegex, term1_remove_sql_exp)
+
+
+term1_regex = CompoundRegex(term1_remove_sql_exp)
 
 
 class DicType(Enum):
@@ -47,9 +52,16 @@ def summarize_without_ray(sentence_list, target, window, verbose, topk, dic_type
         verbose=verbose,
     )
     try:
-        return summarizer.summarize(sentence_list, topk=topk)
+        keyword_list = summarizer.summarize(sentence_list, topk=topk)
     except ValueError:
         return []
+
+    # term1_regex 필터링 적용
+    return [
+        (word, rank)
+        for (word, rank) in keyword_list
+        if not term1_regex.remove(word)
+    ]
 
 
 @ray.remote
