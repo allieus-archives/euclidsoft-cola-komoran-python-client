@@ -12,13 +12,21 @@ from .kr.re.keit.Komoran_pb2 import TokenizeRequest
 from .U_dripwordFinder import (CompoundRegex, term1_remove_sql_exp)
 
 
-term1_regex = CompoundRegex(term1_remove_sql_exp)
-
-
 class DicType(Enum):
     DEFAULT = 0
     OVERALL = 1
     MINIMAL = 2
+
+
+TARGET_DEFAULT = 'localhost:50051'
+WINDOW_DEFAULT = -1
+MIN_COUNT_DEFAULT = 1
+VERBOSE_DEFAULT = False
+TOPK_DEFAULT = 10
+DIC_TYPE_DEFAULT = DicType.DEFAULT
+
+
+term1_regex = CompoundRegex(term1_remove_sql_exp)
 
 
 def to_iterator(obj_ids):
@@ -44,11 +52,14 @@ class GrpcTokenizer:
         return keyword_list
 
 
-def summarize_without_ray(sentence_list, target, window, verbose, topk, dic_type):
+def summarize_without_ray(sentence_list, target=TARGET_DEFAULT, window=WINDOW_DEFAULT,
+                          verbose=VERBOSE_DEFAULT, topk=TOPK_DEFAULT, dic_type=DIC_TYPE_DEFAULT,
+                          min_count=MIN_COUNT_DEFAULT):
     tokenize = GrpcTokenizer(target, dic_type=dic_type)
     summarizer = KeywordSummarizer(
         tokenize=tokenize,
         window=window,
+        min_count=min_count,
         verbose=verbose,
     )
     try:
@@ -65,16 +76,16 @@ def summarize_without_ray(sentence_list, target, window, verbose, topk, dic_type
 
 
 @ray.remote
-def summarize(sentence_list, target, window, verbose, topk, dic_type):
-    return summarize_without_ray(sentence_list, target, window, verbose, topk, dic_type)
+def summarize(sentence_list, target, window, verbose, topk, dic_type, min_count):
+    return summarize_without_ray(sentence_list, target, window, verbose, topk, dic_type, min_count)
 
 
 def summarize_batch_with_ray(sentence_list_series, with_tqdm=True,
-                             target='localhost:50051', window=-1, verbose=False, topk=10,
-                             dic_type=DicType.DEFAULT):
+                             target=TARGET_DEFAULT, window=WINDOW_DEFAULT, verbose=VERBOSE_DEFAULT,
+                             topk=TOPK_DEFAULT, dic_type=DIC_TYPE_DEFAULT, min_count=MIN_COUNT_DEFAULT):
     obj_ids = [
         summarize.remote(sentence_list, target=target, window=window, verbose=verbose, topk=topk,
-                         dic_type=dic_type)
+                         dic_type=dic_type, min_count=min_count)
         for sentence_list in sentence_list_series
     ]
     if with_tqdm:
