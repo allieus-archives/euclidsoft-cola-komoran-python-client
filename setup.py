@@ -12,10 +12,10 @@ install_requires = [
 dependency_links = [
     'https://github.com/lovit/textrank/archive/master.zip',
 ]
- 
+
 setup(
     name='cola-komoran-python-client',
-    version='1.2.4',
+    version='1.3.1',
     url='https://github.com/euclidsoft/cola-komoran-python-client',
     author='Chinseok Lee',
     author_email='me@askcompany.kr',
