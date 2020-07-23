@@ -9,7 +9,7 @@ from textrank import KeywordSummarizer
 
 from .kr.re.keit.Komoran_pb2_grpc import KomoranStub
 from .kr.re.keit.Komoran_pb2 import TokenizeRequest
-from .U_dripwordFinder import (CompoundRegex, term1_remove_sql_exp)
+from .U_dripwordFinder import (CompoundRegex, term1_remove_sql_exp, english_remove_sql_exp, common_remove_sql_exp)
 
 
 class DicType(Enum):
@@ -27,7 +27,8 @@ DIC_TYPE_DEFAULT = DicType.DEFAULT
 
 
 term1_regex = CompoundRegex(term1_remove_sql_exp)
-
+english_regex = CompoundRegex(english_remove_sql_exp)
+common_regex = CompoundRegex(common_remove_sql_exp)
 
 def to_iterator(obj_ids):
     while obj_ids:
@@ -72,6 +73,8 @@ def summarize_without_ray(sentence_list, target=TARGET_DEFAULT, window=WINDOW_DE
         (word, rank)
         for (word, rank) in keyword_list
         if not term1_regex.remove(word)
+        if not english_regex.remove(word)
+        if not common_regex.remove(word)
     ]
 
 
@@ -93,6 +96,17 @@ def summarize_batch_with_ray(sentence_list_series, with_tqdm=True,
     else:
         return ray.get(obj_ids)
 
+def summarize_without_ray(sentence_list, target, window, verbose, topk, dic_type):
+    tokenize = GrpcTokenizer(target, dic_type=dic_type)
+    summarizer = KeywordSummarizer(
+        tokenize = tokenize,
+        window = window,
+        verbose = verbose,
+    )
+    try:
+        return summarizer.summarize(sentence_list, topk=topk)
+    except ValueError:
+        return []
 
 def ray_init(address="auto"):
     ray.init(address=address)
