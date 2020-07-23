@@ -96,17 +96,6 @@ def summarize_batch_with_ray(sentence_list_series, with_tqdm=True,
     else:
         return ray.get(obj_ids)
 
-def summarize_without_ray(sentence_list, target, window, verbose, topk, dic_type):
-    tokenize = GrpcTokenizer(target, dic_type=dic_type)
-    summarizer = KeywordSummarizer(
-        tokenize = tokenize,
-        window = window,
-        verbose = verbose,
-    )
-    try:
-        return summarizer.summarize(sentence_list, topk=topk)
-    except ValueError:
-        return []
 
 def ray_init(address="auto"):
     ray.init(address=address)
