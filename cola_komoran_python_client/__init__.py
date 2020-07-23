@@ -9,7 +9,7 @@ from textrank import KeywordSummarizer
 
 from .kr.re.keit.Komoran_pb2_grpc import KomoranStub
 from .kr.re.keit.Komoran_pb2 import TokenizeRequest
-from .U_dripwordFinder import (CompoundRegex, term1_remove_sql_exp)
+from .U_dripwordFinder import (CompoundRegex, term1_remove_sql_exp, english_remove_sql_exp, common_remove_sql_exp)
 
 
 class DicType(Enum):
@@ -27,7 +27,8 @@ DIC_TYPE_DEFAULT = DicType.DEFAULT
 
 
 term1_regex = CompoundRegex(term1_remove_sql_exp)
-
+english_regex = CompoundRegex(english_remove_sql_exp)
+common_regex = CompoundRegex(common_remove_sql_exp)
 
 def to_iterator(obj_ids):
     while obj_ids:
@@ -72,6 +73,8 @@ def summarize_without_ray(sentence_list, target=TARGET_DEFAULT, window=WINDOW_DE
         (word, rank)
         for (word, rank) in keyword_list
         if not term1_regex.remove(word)
+        if not english_regex.remove(word)
+        if not common_regex.remove(word)
     ]
 
 

@@ -7,6 +7,11 @@ dtype: list = [(tuple),str,...]
 제거되어야 할 용어 = "% 용어 %" (sql 문법으로 작성)
 해당되는 단어는 제외대상에서 제외 =dtype:tuple (("제거 용어1","제거 용어2",...),("제외 용어1", "제외 용어2",...))
 """
+
+english_remove_sql_exp = [
+    "of"
+]
+
 common_remove_sql_exp = [
     "없음내용",
     "내용",
