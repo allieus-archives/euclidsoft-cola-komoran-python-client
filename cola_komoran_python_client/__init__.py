@@ -47,7 +47,7 @@ class GrpcTokenizer:
             self.dic_type = dic_type
 
     def __call__(self, sentence):
-        sentence = setence.lower()
+        sentence = sentence.lower()
         request = TokenizeRequest(dicType=self.dic_type, sentence=sentence)
         response = self.stub.tokenize(request)
         keyword_list = list(response.keyword)
